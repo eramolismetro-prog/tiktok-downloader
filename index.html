@@ -1,1 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Si_c Downloader 🚀</title>
 
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #0f0f1a, #1c1c2e);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(15px);
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  width: 350px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  margin-bottom: 10px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(45deg, #ff0050, #ff7a00);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.loader {
+  margin-top: 15px;
+  border: 4px solid #333;
+  border-top: 4px solid #ff0050;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  display: none;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+video {
+  width: 100%;
+  margin-top: 15px;
+  border-radius: 10px;
+}
+
+a {
+  display: block;
+  margin-top: 10px;
+  color: #00ffcc;
+  font-weight: bold;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+  <h1>Si_c Downloader 🚀</h1>
+
+  <input type="text" id="url" placeholder="Paste link TikTok...">
+  <button onclick="download()">Download</button>
+
+  <div class="loader" id="loader"></div>
+
+  <div id="result"></div>
+</div>
+
+<script>
+
+// 🔥 AUTO PASTE DARI CLIPBOARD
+window.onload = async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    if (text.includes("tiktok.com")) {
+      document.getElementById("url").value = text;
+    }
+  } catch (e) {}
+};
+
+async function download() {
+  const url = document.getElementById("url").value;
+
+  if (!url) {
+    alert("Masukkan link dulu!");
+    return;
+  }
+
+  document.getElementById("loader").style.display = "block";
+  document.getElementById("result").innerHTML = "";
+
+  try {
+    const res = await fetch(`https://api.tiklydown.me/api/download?url=${url}`);
+    const data = await res.json();
+
+    const video = data.video.noWatermark;
+    const audio = data.video.audio;
+
+    document.getElementById("loader").style.display = "none";
+
+    document.getElementById("result").innerHTML = `
+      <video controls src="${video}"></video>
+      <a href="${video}" download>⬇️ Download Video</a>
+      <a href="${audio}" download>🎵 Download MP3</a>
+    `;
+
+  } catch (err) {
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("result").innerHTML = "❌ Gagal ambil video";
+  }
+}
+
+</script>
+
+</body>
+</html>
